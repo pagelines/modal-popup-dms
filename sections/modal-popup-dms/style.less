@@ -1,8 +1,9 @@
 #ModalPopUp.modal {background:transparent;}
 #ModalPopUp {
 	.modal-header {
-		background:@pl-base;
+		background: @pl-base;
 		border-radius: 6px 6px 0 0;
+		border-color: darken( @pl-base,6.5 );
 		-webkit-border-radius: 6px 6px 0 0;
 		-moz-border-radius: 6px 6px 0 0;
 		h1{
@@ -21,7 +22,9 @@
 		}
 	}
 	.modal-footer {
-	background-color: darken( @pl-base, @invert-dark );	
+	background-color: darken( @pl-base,4 );
+	border-top-color: darken( @pl-base,13.5 );
+	box-shadow:inset 0 1px 0 @pl-base;
 	}
 	ol {
 		list-style-type:decimal;

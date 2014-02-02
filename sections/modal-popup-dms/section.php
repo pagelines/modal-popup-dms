@@ -238,17 +238,17 @@ class ModalPopUpDMS extends PageLinesSection {
 		$modal_popup_width_percentage = preg_replace(array('/[^0-9]/'), array(''), $modal_popup_width_percentage );
 		$modal_popup_margin_percentage = (100 - $modal_popup_width_percentage) / 2;
 		if($this->opt('mp_width')){$ModalPopupWidth = sprintf( '@media (min-width: 768px) {#ModalPopUp.modal {width:%s%s;left:auto;margin-left:%s%s;}}', $modal_popup_width_percentage, '%', $modal_popup_margin_percentage, '%' );}else{$ModalPopupWidth ='';}
-		$modal_popup_header_background_color = ($this->opt('mp_header_background_color')) ? $this->opt('mp_header_background_color') : 'ffffff';
-		if($this->opt('mp_header_background_color')){$modal_popup_header_background_css = sprintf( '#ModalPopUp .modal-header {background-color:#%s;}', $modal_popup_header_background_color );}else{$modal_popup_header_background_css ='';}
-		$modal_popup_body_background_color = ($this->opt('mp_body_background_color')) ? $this->opt('mp_body_background_color') : 'ffffff';
+		$modal_popup_body_background_color = str_replace(array('#'), array(), ($this->opt('mp_body_background_color')) ? $this->opt('mp_body_background_color') : 'ffffff');
 		if($this->opt('mp_body_background_color')){$modal_popup_body_background_css = sprintf( '#ModalPopUp .modal-body {background-color:#%s;}', $modal_popup_body_background_color );}else{$modal_popup_body_background_css ='';}
-		$modal_popup_footer_background_color = ($this->opt('mp_footer_background_color')) ? $this->opt('mp_footer_background_color') : 'F2F2F2';
-		if($this->opt('mp_footer_background_color')){$modal_popup_footer_background_css = sprintf( '#ModalPopUp .modal-footer {background-color:#%s;}', $modal_popup_footer_background_color );}else{$modal_popup_footer_background_css ='';}
-		$modal_popup_header_text_color = ($this->opt('mp_header_text_color')) ? $this->opt('mp_header_text_color') : '000000';
+		$modal_popup_footer_background_color = str_replace(array('#'), array(), ($this->opt('mp_footer_background_color')) ? $this->opt('mp_footer_background_color') : 'F2F2F2');
+		if($this->opt('mp_footer_background_color')){$modal_popup_footer_background_css = sprintf( '#ModalPopUp .modal-footer {background-color:#%s;border-top-color:#%s;box-shadow:inset 0 1px 0 #%s;}', $modal_popup_footer_background_color, $modal_popup_footer_background_color, $modal_popup_body_background_color );}else{$modal_popup_footer_background_css ='';}
+		$modal_popup_header_background_color = str_replace(array('#'), array(), ($this->opt('mp_header_background_color')) ? $this->opt('mp_header_background_color') : 'ffffff');
+		if($this->opt('mp_header_background_color')){$modal_popup_header_background_css = sprintf( '#ModalPopUp .modal-header {background-color:#%s;border-color:#%s;}', $modal_popup_header_background_color, $modal_popup_footer_background_color );}else{$modal_popup_header_background_css ='';}
+		$modal_popup_header_text_color = str_replace(array('#'), array(), ($this->opt('mp_header_text_color')) ? $this->opt('mp_header_text_color') : '000000');
 		if($this->opt('mp_header_text_color')){$modal_popup_header_text_css = sprintf( '#ModalPopUp .modal-header h1 {color:#%s;}', $modal_popup_header_text_color );}else{$modal_popup_header_text_css ='';}
-		$modal_popup_body_text_color = ($this->opt('mp_body_text_color')) ? $this->opt('mp_body_text_color') : '777777';
+		$modal_popup_body_text_color = str_replace(array('#'), array(), ($this->opt('mp_body_text_color')) ? $this->opt('mp_body_text_color') : '777777');
 		if($this->opt('mp_body_text_color')){$modal_popup_body_text_css = sprintf( '#ModalPopUp .modal-body, #ModalPopUp .modal-body h1, #ModalPopUp .modal-body h2, #ModalPopUp .modal-body h3, #ModalPopUp .modal-body h4, #ModalPopUp .modal-body h5, #ModalPopUp .modal-body h6 {color:#%s;}', $modal_popup_body_text_color );}else{$modal_popup_body_text_css ='';}
-		$modal_popup_backdrop_color = ($this->opt('mp_backdrop_color')) ? $this->opt('mp_backdrop_color') : '000000';
+		$modal_popup_backdrop_color = str_replace(array('#'), array(), ($this->opt('mp_backdrop_color')) ? $this->opt('mp_backdrop_color') : '000000');
 		if($this->opt('mp_backdrop_color')){$modal_popup_backdrop_css = sprintf( '.modal-backdrop {background-color:#%s;}', $modal_popup_backdrop_color );}else{$modal_popup_backdrop_css ='';}
 		$modal_popup_style = sprintf( '<style>%s%s%s%s%s%s%s</style>', $ModalPopupWidth, $modal_popup_header_background_css, $modal_popup_body_background_css, $modal_popup_footer_background_css, $modal_popup_header_text_css, $modal_popup_body_text_css, $modal_popup_backdrop_css );
 		if($this->opt('mp_width') || $this->opt('mp_header_background_color') || $this->opt('mp_body_background_color') || $this->opt('mp_footer_background_color') || $this->opt('mp_header_text_color') || $this->opt('mp_body_text_color') || $this->opt('mp_backdrop_color')){echo $modal_popup_style;}
