@@ -231,7 +231,7 @@ class ModalPopUpDMS extends PageLinesSection {
 	}
 	function section_scripts() {
 		if ( !$this->opt('mp_disable_automation' ))
-		wp_enqueue_script( 'jquery-cookie',$this->base_url . '/jquery.cookie.js', array( 'jquery' ) );
+		wp_enqueue_script( 'modal-popup-jquery-cookie',$this->base_url . '/jquery.cookie.js', array( 'jquery' ) );
 	}
 	function section_head(){
 		$modal_popup_width_percentage = str_replace(array(' '), array(), ($this->opt('mp_width')) ? $this->opt('mp_width') : '');
