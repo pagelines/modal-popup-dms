@@ -6,7 +6,7 @@ Author URI: http://www.MrFent.com
 Demo: http://modal-popup-dms.MrFent.com
 Description: Display an automatic PopUp window anywhere on your DMS website
 Class Name: ModalPopUpDMS
-Version: 1.0.0
+Version: 1.0.1
 Filter: component
 PageLines: true
 v3: true
@@ -14,9 +14,26 @@ v3: true
 
 class ModalPopUpDMS extends PageLinesSection {
 	
+	function Modal_PopUp_Help(){
+		$modal_id = 'ModalPopUp';
+		if($this->opt('mp_custom_modal_id')) {
+		$modal_id = str_replace(array(' '), array('-'), ($this->opt('mp_custom_modal_id')) ? $this->opt('mp_custom_modal_id') : '');
+		$modal_id = preg_replace(array('/[^A-Za-z0-9-]/'), array(''), $modal_id );
+		$modal_id = sprintf('ModalPopUp-%s', $modal_id); }
+	    ob_start(); 
+		printf( __( '<div class="opt-name">Manually Trigger this PopUp</div>If you have automation disabled, or you simply want to let your visitors be able to manually reopen this PopUp, here&#39;s some code you&#39;ll need to do so.<br /><br /><strong>Note: If you have more than one PopUp on the same page (via cloning the section), you will need to assign each PopUp a Custom Modal ID</strong><hr /><h4>Sample code for a button:</h4><div class="help-block textarea"><strong>&lt;a href="#%1$s" data-toggle="modal" class="btn btn-important" role="button"&gt;Here’s a Button!&lt;/a&gt;</strong></div><hr /><h4>Sample code for a text link:</h4><div class="help-block textarea"><strong>&lt;a href="#%1$s" data-toggle="modal"&gt;Here’s a Text Link!&lt;/a&gt;</strong></div><hr /><h4>Sample code for an image:</h4><div class="help-block textarea"><strong>&lt;a href="#%1$s" data-toggle="modal"&gt;&lt;img src="IMAGE URL" /&gt;&lt;/a&gt;</strong></div><hr />', 'modal-popup-dms' ), $modal_id ); 
+		return ob_get_clean();
+	}
+	
 	function section_opts(){
 		
 		$opts = array(
+			array(
+				'key'		=> 'socialhelp',			
+				'type'		=> 'template',
+				'col'		=> 2,
+				'template' 	=> $this->Modal_PopUp_Help()
+			),
 			array(
 				'type'					=> 'multi',
 				'title' 				=> __( 'Modal Setup', 'modal-popup-dms' ),
@@ -60,7 +77,13 @@ class ModalPopUpDMS extends PageLinesSection {
 						'type'			=> 'check',
 						'help' 			=> __( 'This will prevent your PopUp from appearing automatically when the page loads. If checked, you must provide a <a href="http://modal-popup-dms.mrfent.com/extras/" target="_blank">manual trigger</a> to make the PopUp appear', 'modal-popup-dms' ),
 						'label'			=> __( 'Disable Automation', 'modal-popup-dms' )
-						))),
+						),
+						array(
+							'key'			=> 'mp_custom_modal_id',
+							'type' 			=> 'text',
+							'help' 			=> __( 'If you want to have more than one PopUp on the same page, you&#39;ll need to assign each clone a custom ID', 'modal-popup-dms' ),
+							'label'			=> __( 'Custom Modal ID (Optional)', 'modal-popup-dms' )
+							))),
 			array(
 				'type'					=> 'multi',
 				'title' 				=> __( 'Cookie Setup', 'modal-popup-dms' ),
@@ -234,20 +257,25 @@ class ModalPopUpDMS extends PageLinesSection {
 		wp_enqueue_script( 'modal-popup-jquery-cookie',$this->base_url . '/jquery.cookie.js', array( 'jquery' ) );
 	}
 	function section_head(){
+		$modal_id = 'ModalPopUp';
+		if($this->opt('mp_custom_modal_id')) {
+		$modal_id = str_replace(array(' '), array('-'), ($this->opt('mp_custom_modal_id')) ? $this->opt('mp_custom_modal_id') : '');
+		$modal_id = preg_replace(array('/[^A-Za-z0-9-]/'), array(''), $modal_id );
+		$modal_id = sprintf('ModalPopUp-%s', $modal_id); }
 		$modal_popup_width_percentage = str_replace(array(' '), array(), ($this->opt('mp_width')) ? $this->opt('mp_width') : '');
 		$modal_popup_width_percentage = preg_replace(array('/[^0-9]/'), array(''), $modal_popup_width_percentage );
 		$modal_popup_margin_percentage = (100 - $modal_popup_width_percentage) / 2;
-		if($this->opt('mp_width')){$ModalPopupWidth = sprintf( '@media (min-width: 768px) {#ModalPopUp.modal {width:%s%s;left:auto;margin-left:%s%s;}}', $modal_popup_width_percentage, '%', $modal_popup_margin_percentage, '%' );}else{$ModalPopupWidth ='';}
+		if($this->opt('mp_width')){$ModalPopupWidth = sprintf( '@media (min-width: 768px) {#%s.modal {width:%s%%;left:auto;margin-left:%s%%;}}', $modal_id, $modal_popup_width_percentage, $modal_popup_margin_percentage);}else{$ModalPopupWidth ='';}
 		$modal_popup_body_background_color = str_replace(array('#'), array(), ($this->opt('mp_body_background_color')) ? $this->opt('mp_body_background_color') : 'ffffff');
-		if($this->opt('mp_body_background_color')){$modal_popup_body_background_css = sprintf( '#ModalPopUp .modal-body {background-color:#%s;}', $modal_popup_body_background_color );}else{$modal_popup_body_background_css ='';}
-		$modal_popup_footer_background_color = str_replace(array('#'), array(), ($this->opt('mp_footer_background_color')) ? $this->opt('mp_footer_background_color') : 'F2F2F2');
-		if($this->opt('mp_footer_background_color')){$modal_popup_footer_background_css = sprintf( '#ModalPopUp .modal-footer {background-color:#%s;border-top-color:#%s;box-shadow:inset 0 1px 0 #%s;}', $modal_popup_footer_background_color, $modal_popup_footer_background_color, $modal_popup_body_background_color );}else{$modal_popup_footer_background_css ='';}
+		if($this->opt('mp_body_background_color')){$modal_popup_body_background_css = sprintf( '#%s .modal-body {background-color:#%s;}', $modal_id, $modal_popup_body_background_color );}else{$modal_popup_body_background_css ='';}
+		$modal_popup_footer_background_color = str_replace(array('#'), array(), ($this->opt('mp_footer_background_color')) ? $this->opt('mp_footer_background_color') : pl_setting( 'pl-base'));
+		if($this->opt('mp_footer_background_color')){$modal_popup_footer_background_css = sprintf( '#%s .modal-footer {background-color:#%s;border-top-color:#%s;box-shadow:inset 0 1px 0 #%s;}', $modal_id, $modal_popup_footer_background_color, $modal_popup_footer_background_color, $modal_popup_body_background_color );}else{$modal_popup_footer_background_css ='';}
 		$modal_popup_header_background_color = str_replace(array('#'), array(), ($this->opt('mp_header_background_color')) ? $this->opt('mp_header_background_color') : 'ffffff');
-		if($this->opt('mp_header_background_color')){$modal_popup_header_background_css = sprintf( '#ModalPopUp .modal-header {background-color:#%s;border-color:#%s;}', $modal_popup_header_background_color, $modal_popup_footer_background_color );}else{$modal_popup_header_background_css ='';}
+		if($this->opt('mp_header_background_color')){$modal_popup_header_background_css = sprintf( '#%s .modal-header {background-color:#%s;border-color:#%s;}', $modal_id, $modal_popup_header_background_color, $modal_popup_footer_background_color );}else{$modal_popup_header_background_css ='';}
 		$modal_popup_header_text_color = str_replace(array('#'), array(), ($this->opt('mp_header_text_color')) ? $this->opt('mp_header_text_color') : '000000');
-		if($this->opt('mp_header_text_color')){$modal_popup_header_text_css = sprintf( '#ModalPopUp .modal-header h1 {color:#%s;}', $modal_popup_header_text_color );}else{$modal_popup_header_text_css ='';}
-		$modal_popup_body_text_color = str_replace(array('#'), array(), ($this->opt('mp_body_text_color')) ? $this->opt('mp_body_text_color') : '777777');
-		if($this->opt('mp_body_text_color')){$modal_popup_body_text_css = sprintf( '#ModalPopUp .modal-body, #ModalPopUp .modal-body h1, #ModalPopUp .modal-body h2, #ModalPopUp .modal-body h3, #ModalPopUp .modal-body h4, #ModalPopUp .modal-body h5, #ModalPopUp .modal-body h6 {color:#%s;}', $modal_popup_body_text_color );}else{$modal_popup_body_text_css ='';}
+		if($this->opt('mp_header_text_color')){$modal_popup_header_text_css = sprintf( '#%s .modal-header h1 {color:#%s;}', $modal_id, $modal_popup_header_text_color );}else{$modal_popup_header_text_css ='';}
+		$modal_popup_body_text_color = str_replace(array('#'), array(), ($this->opt('mp_body_text_color')) ? $this->opt('mp_body_text_color') : '777777');	
+		if($this->opt('mp_body_text_color')){$modal_popup_body_text_css = sprintf( '#%1$s .modal-body, #%1$s .modal-body h1, #%1$s .modal-body h2, #%1$s .modal-body h3, #%1$s .modal-body h4, #%1$s .modal-body h5, #%1$s .modal-body h6 {color:#%2$s;}', $modal_id, $modal_popup_body_text_color );}else{$modal_popup_body_text_css ='';}
 		$modal_popup_backdrop_color = str_replace(array('#'), array(), ($this->opt('mp_backdrop_color')) ? $this->opt('mp_backdrop_color') : '000000');
 		if($this->opt('mp_backdrop_color')){$modal_popup_backdrop_css = sprintf( '.modal-backdrop {background-color:#%s;}', $modal_popup_backdrop_color );}else{$modal_popup_backdrop_css ='';}
 		$modal_popup_style = sprintf( '<style>%s%s%s%s%s%s%s</style>', $ModalPopupWidth, $modal_popup_header_background_css, $modal_popup_body_background_css, $modal_popup_footer_background_css, $modal_popup_header_text_css, $modal_popup_body_text_css, $modal_popup_backdrop_css );
@@ -257,6 +285,11 @@ class ModalPopUpDMS extends PageLinesSection {
 		echo __( '<div class="alert pl-editor-only"><strong>Admin Notice:</strong><br />This is the placeholder for your Modal PopUp section. Visitors will not see this.</div>', 'modal-popup-dms' );
 
 		$modal_popup_post_id = ($this->opt('mp_page_id')) ? $this->opt('mp_page_id') : '1';
+		$modal_id = 'ModalPopUp';
+		if($this->opt('mp_custom_modal_id')) {
+		$modal_id = str_replace(array(' '), array('-'), ($this->opt('mp_custom_modal_id')) ? $this->opt('mp_custom_modal_id') : '');
+		$modal_id = preg_replace(array('/[^A-Za-z0-9-]/'), array(''), $modal_id );
+		$modal_id = sprintf('ModalPopUp-%s', $modal_id); }
 		$modal_popup_queried_post = get_post($modal_popup_post_id);
 		$modal_popup_delay = str_replace(array(' '), array(), ($this->opt('mp_delay')) ? $this->opt('mp_delay') : '500');
 		$modal_popup_delay = preg_replace(array('/[^0-9]/'), array(''), $modal_popup_delay );
@@ -309,7 +342,7 @@ class ModalPopUpDMS extends PageLinesSection {
 		if(jQuery.cookie('<?php echo $modal_popup_cookie; ?>') == null) { 
 		jQuery(document).ready(function(){
 			setTimeout(function(){
-			jQuery('#ModalPopUp').modal('show');
+			jQuery('#<?php echo $modal_id; ?>').modal('show');
 		},<?php echo $modal_popup_delay?>);
 		});	
 		<?php if (!$this->opt('mp_session_cookie')){echo $modal_popup_expire_mode_front;} ?>
@@ -321,13 +354,13 @@ jQuery.cookie('<?php echo $modal_popup_cookie; ?>', 'Modal_Popup_for_DMS', { <?p
 		<script type='text/javascript'>
 			jQuery(document).ready(function(){
 				jQuery('.modal').appendTo(jQuery('body'));
-				jQuery('#ModalPopUp .modal-body').css({ 'max-height': ((jQuery(window).height()) - 337) + 'px' });
+				jQuery('#<?php echo $modal_id; ?> .modal-body').css({ 'max-height': ((jQuery(window).height()) - 337) + 'px' });
 				jQuery(window).resize(function () {
-					jQuery('#ModalPopUp .modal-body').css({ 'max-height': ((jQuery(window).height()) - 337) + 'px' });
+					jQuery('#<?php echo $modal_id; ?> .modal-body').css({ 'max-height': ((jQuery(window).height()) - 337) + 'px' });
 				});
 			});
 		</script> 
-		<?php printf( '<div id="ModalPopUp" class="modal hide fade"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h1>%s</h1></div><div class="modal-body">%s</div><div class="modal-footer" style="text-align: %s;">', $modal_header, $modal_body, $modal_popup_button_alignment );
+		<?php printf( '<div id="%s" class="modal hide fade"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h1>%s</h1></div><div class="modal-body">%s</div><div class="modal-footer" style="text-align: %s;">', $modal_id, $modal_header, $modal_body, $modal_popup_button_alignment );
 					if ($this->opt('mp_add_action_button') && $this->opt('mp_button_swap')) echo $call;
 					echo $close;
 					if ($this->opt('mp_add_action_button') && !$this->opt('mp_button_swap')) echo $call;?></div></div><?php 

@@ -1,5 +1,5 @@
-#ModalPopUp.modal {background:transparent;}
-#ModalPopUp {
+[id^="ModalPopUp"].modal {background:transparent;}
+[id^="ModalPopUp"] {
 	.modal-header {
 		background: @pl-base;
 		border-radius: 6px 6px 0 0;
@@ -38,11 +38,11 @@
 	}
 }
 @media only screen and (min-device-width : 320px) and (max-device-width : 568px) {
-	#ModalPopUp .modal-header h1 {
+	[id^="ModalPopUp"] .modal-header h1 {
 			line-height:1;
 			font-size:20px;
 	}
-	#ModalPopUp.modal.fade.in {
+	[id^="ModalPopUp"].modal.fade.in {
 		top: 5%;
 	}
 }
