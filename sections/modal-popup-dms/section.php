@@ -6,7 +6,7 @@ Author URI: http://www.MrFent.com
 Demo: http://modal-popup-dms.MrFent.com
 Description: Display an automatic PopUp window anywhere on your DMS website
 Class Name: ModalPopUpDMS
-Version: 1.0.1
+Version: 1.1.0
 Filter: component
 PageLines: true
 v3: true
@@ -331,7 +331,7 @@ class ModalPopUpDMS extends PageLinesSection {
 		$modal_body = do_shortcode($modal_popup_queried_post->post_content);
 
 		} else {
-		$default_body_text = __( '<div class="row"><div class="span7"><h6 style="font-size:16px;">You can easily create your own Modal PopUps in the DMS Section Options.</h6><h6 style="font-size:16px;">Just enter a title, some content, and then configure your other options, such as Cookie Setup, Call to Action button, and Color Control.</h6><h6 style="font-size:16px;">You can also use a page for your PopUp content if you prefer. Just select your page from the drop-down, and that page&#39;s content will appear in your PopUp.</h6>&nbsp;<p style="text-align:center;">[pl_button type="inverse" link="http://modal-popup-dms.mrfent.com" target="blank" size="large"]Learn More <em class="icon-chevron-sign-right"></em>[/pl_button]</p></div><div class="span5"><p style="text-align:center;"><em style="font-size:245px; color:#3c99ff;" class="icon-pagelines"></em></p></div></div>', 'modal-popup-dms' );
+		$default_body_text = __( '<div class="row"><div class="span7"><h6 style="font-size:16px;">You can easily create your own Modal PopUps in the DMS Section Options.</h6><h6 style="font-size:16px;">Just enter a title, some content, and then configure your other options, such as Cookie Setup, Call to Action button, and Color Control.</h6><h6 style="font-size:16px;">You can also use a page for your PopUp content if you prefer. Just select your page from the drop-down, and that page&#39;s content will appear in your PopUp.</h6>&nbsp;<p style="text-align:center;">[pl_button type="inverse" link="http://modal-popup-dms.mrfent.com" target="blank" size="large"]Learn More <em class="icon icon-chevron-sign-right"></em>[/pl_button]</p></div><div class="span5"><p style="text-align:center;"><em style="font-size:245px; color:#3c99ff;" class="icon icon-pagelines"></em></p></div></div>', 'modal-popup-dms' );
 		$modal_body = ($this->opt('mp_body_text')) ? wpautop($this->opt('mp_body_text')) : do_shortcode($default_body_text);
 		if ($this->opt('mp_remove_auto_formatting')) 	
 		$modal_body = ($this->opt('mp_body_text')) ? $this->opt('mp_body_text') : do_shortcode($default_body_text);
