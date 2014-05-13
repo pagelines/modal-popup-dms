@@ -6,7 +6,7 @@ Author URI: http://www.MrFent.com
 Demo: http://modal-popup-dms.MrFent.com
 Description: Display an automatic PopUp window anywhere on your DMS website
 Class Name: ModalPopUpDMS
-Version: 1.1.0
+Version: 1.1.1
 Filter: component
 PageLines: true
 v3: true
@@ -78,12 +78,22 @@ class ModalPopUpDMS extends PageLinesSection {
 						'help' 			=> __( 'This will prevent your PopUp from appearing automatically when the page loads. If checked, you must provide a <a href="http://modal-popup-dms.mrfent.com/extras/" target="_blank">manual trigger</a> to make the PopUp appear', 'modal-popup-dms' ),
 						'label'			=> __( 'Disable Automation', 'modal-popup-dms' )
 						),
-						array(
-							'key'			=> 'mp_custom_modal_id',
-							'type' 			=> 'text',
-							'help' 			=> __( 'If you want to have more than one PopUp on the same page, you&#39;ll need to assign each clone a custom ID', 'modal-popup-dms' ),
-							'label'			=> __( 'Custom Modal ID (Optional)', 'modal-popup-dms' )
-							))),
+					array(
+						'key'			=> 'mp_custom_modal_id',
+						'type' 			=> 'text',
+						'help' 			=> __( 'If you want to have more than one PopUp on the same page, you&#39;ll need to assign each clone a custom ID', 'modal-popup-dms' ),
+						'label'			=> __( 'Custom Modal ID (Optional)', 'modal-popup-dms' )
+						),
+					array(
+						'key'			=> 'mp_data_backdrop',
+						'type'			=> 'check',
+						'label'			=> __( 'Disable Modal close on backdrop click', 'modal-popup-dms' )
+						),
+					array(
+						'key'			=> 'mp_data_keyboard',
+						'type'			=> 'check',
+						'label'			=> __( 'Disable Modal close on ESC key press', 'modal-popup-dms' )
+						))),
 			array(
 				'type'					=> 'multi',
 				'title' 				=> __( 'Cookie Setup', 'modal-popup-dms' ),
@@ -290,6 +300,10 @@ class ModalPopUpDMS extends PageLinesSection {
 		$modal_id = str_replace(array(' '), array('-'), ($this->opt('mp_custom_modal_id')) ? $this->opt('mp_custom_modal_id') : '');
 		$modal_id = preg_replace(array('/[^A-Za-z0-9-]/'), array(''), $modal_id );
 		$modal_id = sprintf('ModalPopUp-%s', $modal_id); }
+		$modal_popup_data_backdrop = 'true';
+		if($this->opt('mp_data_backdrop')) {$modal_popup_data_backdrop = 'static';}
+		$modal_popup_data_keyboard = 'true';
+		if($this->opt('mp_data_keyboard')) {$modal_popup_data_keyboard = 'false';}
 		$modal_popup_queried_post = get_post($modal_popup_post_id);
 		$modal_popup_delay = str_replace(array(' '), array(), ($this->opt('mp_delay')) ? $this->opt('mp_delay') : '500');
 		$modal_popup_delay = preg_replace(array('/[^0-9]/'), array(''), $modal_popup_delay );
@@ -359,8 +373,8 @@ jQuery.cookie('<?php echo $modal_popup_cookie; ?>', 'Modal_Popup_for_DMS', { <?p
 					jQuery('#<?php echo $modal_id; ?> .modal-body').css({ 'max-height': ((jQuery(window).height()) - 337) + 'px' });
 				});
 			});
-		</script> 
-		<?php printf( '<div id="%s" class="modal hide fade"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h1>%s</h1></div><div class="modal-body">%s</div><div class="modal-footer" style="text-align: %s;">', $modal_id, $modal_header, $modal_body, $modal_popup_button_alignment );
+		</script>		
+		<?php printf( '<div id="%s" class="modal hide fade" data-backdrop="%s" data-keyboard="%s" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h1>%s</h1></div><div class="modal-body">%s</div><div class="modal-footer" style="text-align: %s;">', $modal_id, $modal_popup_data_backdrop, $modal_popup_data_keyboard, $modal_header, $modal_body, $modal_popup_button_alignment );
 					if ($this->opt('mp_add_action_button') && $this->opt('mp_button_swap')) echo $call;
 					echo $close;
 					if ($this->opt('mp_add_action_button') && !$this->opt('mp_button_swap')) echo $call;?></div></div><?php 
